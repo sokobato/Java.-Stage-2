@@ -1,4 +1,6 @@
-package ru.geekbrains.java_two.lesson_d.online;
+package ru.geekbrains.lesson.d;
+
+import ru.geekbrains.lesson.d.ChatServer;
 
 import javax.swing.*;
 import java.awt.*;

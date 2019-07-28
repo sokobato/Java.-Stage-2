@@ -1,9 +1,22 @@
-package ru.geekbrains.java_two.lesson_d.online;
+package ru.geekbrains.lesson.d;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * 1. Отправлять сообщения в лог по нажатию кнопки или по нажатию клавиши Enter.
+ * 2. Создать лог в файле (показать комментарием, где и как Вы планируете писать сообщение в файловый журнал).
+ * Прочитать методичку к следующему уроку
+ */
 
 public class ClientGUI extends JFrame  implements ActionListener, Thread.UncaughtExceptionHandler  {
 
@@ -26,17 +39,24 @@ public class ClientGUI extends JFrame  implements ActionListener, Thread.Uncaugh
 
     private final JList<String> userList = new JList<>();
 
+    //2 Создать лог в файле
+    private PrintWriter printwriter = new PrintWriter(new FileWriter("log.txt"));
 
+    //2 Создать лог в файле
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new ClientGUI();
+                try {
+                    new ClientGUI();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    private ClientGUI() {
+    private ClientGUI() throws IOException {
         Thread.setDefaultUncaughtExceptionHandler(this);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -65,14 +85,21 @@ public class ClientGUI extends JFrame  implements ActionListener, Thread.Uncaugh
         add(panelBottom, BorderLayout.SOUTH);
         add(scrollLog, BorderLayout.CENTER);
         add(scrollUsers, BorderLayout.EAST);
+
+        //1 Отправлять сообщения в лог
+        btnSend.addActionListener(e -> {
+            sendMessage();
+        });
+        tfMessage.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) sendMessage();
+            }
+        });
+
         setVisible(true);
     }
-/*
-	Отправлять сообщения в лог по нажатию кнопки или по нажатию клавиши Enter.
-	Создать лог в файле (показать комментарием, где и как Вы планируете писать сообщение в файловый журнал).
-    Прочитать методичку к следующему уроку
 
-* */
         @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
@@ -96,5 +123,21 @@ public class ClientGUI extends JFrame  implements ActionListener, Thread.Uncaugh
         }
         JOptionPane.showMessageDialog(this, msg, "Exception", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
+    }
+
+    //1 Отправлять сообщения в лог
+    //sent mess
+    void sendMessage() {
+        String out = tfMessage.getText();
+        log.append(getTime() + ": " + out + "\n");
+        printwriter.append(getTime() + ": " + out + "\n");
+        printwriter.flush();
+        tfMessage.setText("");
+        tfMessage.grabFocus();
+    }
+
+    //cur time
+    public String getTime() {
+        return new SimpleDateFormat("HH:mm:ss").format(new Date());
     }
 }

@@ -1,4 +1,4 @@
-package ru.geekbrains.java_two.lesson_d.online;
+package ru.geekbrains.lesson.d;
 
 public class ChatServer {
     void start(int port) {
