@@ -63,8 +63,8 @@ public class Main {
     public void runTwoThreads() {
         ArraysHandler ah = new ArraysHandler(size);
         long startmeas = System.currentTimeMillis();
-        ArraysHandler ah1 = new ArraysHandler(ah.getArr(),0,0, h);
-        ArraysHandler ah2 = new ArraysHandler(ah.getArr(), h,0, h);
+        ArraysHandler ah1 = new ArraysHandler(ah.getArr(), 0, 0, h);
+        ArraysHandler ah2 = new ArraysHandler(ah.getArr(), h, 0, h);
 
         Thread t1 = new Thread(() -> ah1.calculateArrayValues());
         Thread t2 = new Thread(() -> ah2.calculateArrayValues());
@@ -79,8 +79,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        ah.appendArray(ah1.getArr(),0,0, h);
-        ah.appendArray(ah1.getArr(),0, h, h);
+        ah.appendArray(ah1.getArr(), 0, 0, h);
+        ah.appendArray(ah2.getArr(), 0, h, h);
 
         System.out.println("Two threads ends with: " + (System.currentTimeMillis() - startmeas));
     }
